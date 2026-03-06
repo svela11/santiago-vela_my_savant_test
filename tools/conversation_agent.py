@@ -121,8 +121,19 @@ class ConversationAgent:
         # Normalizar errores ortográficos comunes
         message_lower = self._normalize_spelling(message_lower)
         
-        # PRIORIDAD 1: Si contiene ID de envío + palabras de consulta = consulta_estado
+        # PRIORIDAD 0: Detectar reprogramación PRIMERO (tiene máxima precedencia)
         import re
+        reprog_words = [
+            "reprogramar", "repgrogramar", "cambiar", "mover", "nueva fecha", "reschedule",
+            "se puede reprogramar", "puedo cambiar", "modificar entrega", "quiero mover",
+            "reagenda", "reagendar", "para mañana", "para el viernes", "para el lunes",
+            "para el sábado", "para el jueves", "en la tarde", "por la mañana", "en la noche",
+            "kiero mover", "quiero que llegue"
+        ]
+        if any(word in message_lower for word in reprog_words):
+            return "reprogramar_entrega"
+        
+        # PRIORIDAD 1: Si contiene ID de envío + palabras de consulta = consulta_estado
         has_shipment_id = re.search(r'\b\d{4,8}\b', user_message)  # Ampliado para IDs de 4-8 dígitos
         has_query_words = any(word in message_lower for word in [
             "estado", "status", "cuál es", "como va", "información", "consultar", "necesito",
@@ -143,17 +154,6 @@ class ConversationAgent:
         # PRIORIDAD 3: Si la conversación anterior pidió un ID y ahora hay un ID = consulta_estado
         if has_shipment_id and self.conversation_state.get("current_intent") == "consulta_estado":
             return "consulta_estado"
-        
-        # PRIORIDAD 4: Palabras específicas de reprogramación
-        reprog_words = [
-            "reprogramar", "repgrogramar", "cambiar", "mover", "nueva fecha", "reschedule",
-            "se puede reprogramar", "puedo cambiar", "modificar entrega", "quiero mover",
-            "reagenda", "reagendar", "para mañana", "para el viernes", "para el lunes",
-            "para el sábado", "para el jueves", "en la tarde", "por la mañana", "en la noche",
-            "kiero mover", "quiero que llegue"
-        ]
-        if any(word in message_lower for word in reprog_words):
-            return "reprogramar_entrega"
         
         # PRIORIDAD 5: Palabras específicas de incidencias
         incident_words = [
