@@ -133,6 +133,25 @@ class ConversationAgent:
         if any(word in message_lower for word in reprog_words):
             return "reprogramar_entrega"
         
+        # PRIORIDAD 0.5: Detectar incidencias ANTES que consultas (crítico)
+        incident_words = [
+            "dañado", "problema", "incidencia", "perdido", "retraso", "ticket", "abierto", "roto",
+            "mal estado", "defectuoso", "averiado", "llegó mal", "llegó abierto", "llegó dañado",
+            "no llegó", "tardó", "demora", "llegó tarde", "llegó incompleto", "nunca llegó",
+            "se perdió", "llegó mal", "retrasado", "debía llegar", "debería haber llegado",
+            "sigue en tránsito", "dice entregado pero no lo recibí", "no lo recibí", "no llego"
+        ]
+        if any(word in message_lower for word in incident_words):
+            return "reportar_incidencia"
+        
+        # PRIORIDAD 0.7: Detectar intenciones no soportadas ANTES que consultas
+        unsupported_words = [
+            "cancelar", "cancela", "devolver", "devolución", "dirección", "direccion", 
+            "costo", "costó", "precio", "repartidor", "conductor", "eliminar"
+        ]
+        if any(word in message_lower for word in unsupported_words):
+            return "no_soportado"
+        
         # PRIORIDAD 1: Si contiene ID de envío + palabras de consulta = consulta_estado
         has_shipment_id = re.search(r'\b\d{4,8}\b', user_message)  # Ampliado para IDs de 4-8 dígitos
         has_query_words = any(word in message_lower for word in [
@@ -155,16 +174,7 @@ class ConversationAgent:
         if has_shipment_id and self.conversation_state.get("current_intent") == "consulta_estado":
             return "consulta_estado"
         
-        # PRIORIDAD 5: Palabras específicas de incidencias
-        incident_words = [
-            "dañado", "problema", "incidencia", "perdido", "retraso", "ticket", "abierto", "roto",
-            "mal estado", "defectuoso", "averiado", "llegó mal", "llegó abierto", "llegó dañado",
-            "no llegó", "tardó", "demora", "llegó tarde", "llegó incompleto", "nunca llegó",
-            "se perdió", "llegó mal", "retrasado", "debía llegar", "debería haber llegado",
-            "sigue en tránsito", "dice entregado pero no lo recibí", "no lo recibí", "no llego"
-        ]
-        if any(word in message_lower for word in incident_words):
-            return "reportar_incidencia"
+        # (Incidencias ya detectadas en PRIORIDAD 0.5)
         
         # PRIORIDAD 6: Palabras de consulta sin ID = pedir ID
         query_words = [

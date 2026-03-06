@@ -1,0 +1,46 @@
+[
+  {
+    "ticket_id": "TK20260306170319",
+    "shipment_id": "1395083",
+    "issue_type": "daño",
+    "description": "Mi paquete 1395083 llegó abierto",
+    "severity": "medium",
+    "contact_info": "Por definir",
+    "status": "abierto",
+    "created_at": "2026-03-06T17:03:19.724435",
+    "updated_at": "2026-03-06T17:03:19.724439"
+  },
+  {
+    "ticket_id": "TK20260306170324",
+    "shipment_id": "1395083",
+    "issue_type": "daño",
+    "description": "Mi paquete 1395083 llegó abierto",
+    "severity": "medium",
+    "contact_info": "Por definir",
+    "status": "abierto",
+    "created_at": "2026-03-06T17:03:24.062209",
+    "updated_at": "2026-03-06T17:03:24.062212"
+  },
+  {
+    "ticket_id": "TK20260306170341",
+    "shipment_id": "14309635",
+    "issue_type": "daño",
+    "description": "El envío 14309635 llegó dañado",
+    "severity": "medium",
+    "contact_info": "Por definir",
+    "status": "abierto",
+    "created_at": "2026-03-06T17:03:41.257556",
+    "updated_at": "2026-03-06T17:03:41.257560"
+  },
+  {
+    "ticket_id": "TK20260306170411",
+    "shipment_id": "1395083",
+    "issue_type": "otro",
+    "description": "Mi envío 1395083 nunca llegó",
+    "severity": "medium",
+    "contact_info": "Por definir",
+    "status": "abierto",
+    "created_at": "2026-03-06T17:04:11.958471",
+    "updated_at": "2026-03-06T17:04:11.958481"
+  }
+]
