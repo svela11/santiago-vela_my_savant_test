@@ -111,7 +111,7 @@ ls -la
 1. Recrear los archivos faltantes siguiendo la documentación
 2. O contactar al desarrollador para obtener el código completo
 
-### 5. Ejecutar el Sistema (3 Terminales)
+### 5. Ejecutar el Sistema 
 
 #### Terminal 1: Iniciar Ollama
 ```bash
@@ -122,19 +122,8 @@ ollama serve
 ollama list
 ```
 
-#### Terminal 2: Iniciar Mock API (si existe)
-```bash
-# Navegar al directorio del proyecto
-cd santiago-vela_my_savant_test
 
-# Iniciar servidor API (si existe el archivo)
-python -m uvicorn tools.mock_api_server:app --host 0.0.0.0 --port 8000
-
-# Verificar funcionamiento
-curl http://localhost:8000/health
-```
-
-#### Terminal 3: Iniciar Interfaz Web (si existe)
+#### Terminal 2: Iniciar Interfaz Web
 ```bash
 # Navegar al directorio del proyecto
 cd santiago-vela_my_savant_test
