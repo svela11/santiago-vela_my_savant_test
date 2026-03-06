@@ -51,14 +51,45 @@ ollama pull mistral
 
 ## ⚡ Instalación Rápida (≤ 10 minutos)
 
-### 1. Clonar/Descargar Proyecto
+### 1. Clonar Repositorio desde GitHub
 ```bash
-cd santiago_vela_new_test
+# Clonar el repositorio
+git clone https://github.com/svela11/santiago-vela_my_savant_test.git
+
+# Navegar al directorio del proyecto
+cd santiago-vela_my_savant_test
+
+# Verificar que los archivos se clonaron correctamente
+ls -la
 ```
 
-### 2. Instalar Dependencias
+**Archivos esperados después del clonado:**
+```
+├── .gitignore
+├── Listado Ordenes.json     # Datos de envíos
+├── data/                    # Datos procesados
+├── .env                     # Variables de entorno (si existe)
+└── README.md               # Este archivo
+```
+
+### 2. Instalar Dependencias Python
 ```bash
+# Crear entorno virtual (recomendado)
+python -m venv venv
+
+# Activar entorno virtual
+# En macOS/Linux:
+source venv/bin/activate
+# En Windows:
+# venv\Scripts\activate
+
+# Instalar dependencias
 pip install -r requirements.txt
+```
+
+**Si no existe requirements.txt, instalar manualmente:**
+```bash
+pip install fastapi uvicorn streamlit pandas requests pydantic python-dotenv
 ```
 
 ### 3. Iniciar Ollama
@@ -66,20 +97,49 @@ pip install -r requirements.txt
 ollama serve
 ```
 
-### 4. Cómo Correr Mock API
+### 4. Verificar Estructura del Proyecto
 ```bash
-# Terminal 1: Iniciar servidor API
-cd santiago_vela_new_test
+# Verificar que tienes los archivos necesarios
+ls -la
+
+# Deberías ver al menos:
+# - Listado Ordenes.json (archivo de datos)
+# - data/ (carpeta con datos procesados)
+```
+
+**⚠️ IMPORTANTE**: Si faltan archivos del código fuente (tools/, config/, app.py, etc.), necesitarás:
+1. Recrear los archivos faltantes siguiendo la documentación
+2. O contactar al desarrollador para obtener el código completo
+
+### 5. Ejecutar el Sistema (3 Terminales)
+
+#### Terminal 1: Iniciar Ollama
+```bash
+# Iniciar servidor Ollama
+ollama serve
+
+# Verificar que funciona
+ollama list
+```
+
+#### Terminal 2: Iniciar Mock API (si existe)
+```bash
+# Navegar al directorio del proyecto
+cd santiago-vela_my_savant_test
+
+# Iniciar servidor API (si existe el archivo)
 python -m uvicorn tools.mock_api_server:app --host 0.0.0.0 --port 8000
 
 # Verificar funcionamiento
 curl http://localhost:8000/health
 ```
 
-### 5. Cómo Correr el Agente/UI
+#### Terminal 3: Iniciar Interfaz Web (si existe)
 ```bash
-# Terminal 2: Iniciar interfaz web
-cd santiago_vela_new_test
+# Navegar al directorio del proyecto
+cd santiago-vela_my_savant_test
+
+# Iniciar interfaz web (si existe app.py)
 streamlit run app.py
 
 # La aplicación se abrirá automáticamente en el navegador
@@ -263,6 +323,40 @@ Verifica el número e intenta nuevamente.
 
 ## 🛠️ Troubleshooting Rápido
 
+### Problema: Error al Clonar Repositorio
+**Síntomas**: `git clone` falla o archivos incompletos
+```bash
+# Verificar conexión a GitHub
+ping github.com
+
+# Clonar con HTTPS si SSH falla
+git clone https://github.com/svela11/santiago-vela_my_savant_test.git
+
+# Si el repositorio es privado, autenticarse
+git config --global user.name "Tu Nombre"
+git config --global user.email "tu@email.com"
+
+# Descargar como ZIP si git falla
+# Ir a: https://github.com/svela11/santiago-vela_my_savant_test
+# Click en "Code" > "Download ZIP"
+```
+
+### Problema: Archivos Faltantes Después del Clonado
+**Síntomas**: Solo aparecen README.md, .gitignore y datos
+```bash
+# Verificar qué archivos están en el repositorio remoto
+git ls-tree -r HEAD --name-only
+
+# Si faltan archivos de código, contactar al desarrollador
+# Los archivos principales que deberían estar:
+# - tools/mock_api_server.py
+# - tools/conversation_agent.py  
+# - tools/llm_interface.py
+# - app.py
+# - config/
+# - requirements.txt
+```
+
 ### Problema: "API: Offline" en Interfaz
 **Síntomas**: Chat no funciona, error "API no disponible"
 ```bash
@@ -272,7 +366,8 @@ lsof -i :8000
 # Si está ocupado, matar proceso
 lsof -ti:8000 | xargs kill -9
 
-# Reiniciar API
+# Reiniciar API (si existe el archivo)
+cd santiago-vela_my_savant_test
 python -m uvicorn tools.mock_api_server:app --host 0.0.0.0 --port 8000
 ```
 
@@ -322,6 +417,42 @@ kill -9 <PID>
 
 # O matar todos los procesos del puerto
 lsof -ti:8000,8502,11434 | xargs kill -9
+```
+
+### Problema: Repositorio Vacío o Solo con Datos
+**Síntomas**: Solo tienes README.md, .gitignore, Listado Ordenes.json
+```bash
+# Verificar el contenido del repositorio remoto
+git ls-remote --heads origin
+
+# Verificar si hay otras ramas
+git branch -r
+
+# Si el código está en otra rama
+git checkout develop
+# o
+git checkout main
+
+# Si no hay código fuente, necesitarás:
+# 1. Contactar al desarrollador (Santiago Vela)
+# 2. O recrear los archivos siguiendo la documentación
+```
+
+### Problema: No Tienes Git Instalado
+**Síntomas**: `git: command not found`
+```bash
+# macOS
+xcode-select --install
+# o
+brew install git
+
+# Linux (Ubuntu/Debian)
+sudo apt update && sudo apt install git
+
+# Linux (CentOS/RHEL)
+sudo yum install git
+
+# Windows: Descargar desde https://git-scm.com/
 ```
 
 ## 📊 Monitoreo y Logs
