@@ -1,0 +1,28 @@
+{
+  "client_id": "default",
+  "tone": "formal",
+  "language": "es",
+  "policies": {
+    "no_hallucination": true,
+    "require_confirmation": true,
+    "escalation_threshold": "medium"
+  },
+  "required_fields": {
+    "consulta_estado": ["shipment_id"],
+    "reprogramar_entrega": ["shipment_id", "new_date", "new_time"],
+    "reportar_incidencia": ["shipment_id", "issue_type", "description"]
+  },
+  "message_templates": {
+    "greeting": "Buenos días. Soy el asistente de logística. Estoy aquí para ayudarle con consultas de estado de envíos, reprogramación de entregas y reporte de incidencias. ¿En qué puedo asistirle?",
+    "status_update": "El estado de su envío {shipment_id} es: {status}. Origen: {origin}. Destino: {destination}. Fecha estimada de entrega: {eta}.",
+    "error_message": "Se ha producido un error. Por favor, intente nuevamente o contacte al servicio de soporte técnico.",
+    "escalation": "Para resolver este asunto de manera más efectiva, le recomiendo contactar directamente a nuestro equipo de soporte especializado.",
+    "confirmation": "¿Confirma que desea proceder con esta acción?"
+  },
+  "escalation_rules": {
+    "high_severity_incidents": true,
+    "multiple_failed_attempts": 3,
+    "unknown_shipment_ids": true,
+    "system_errors": true
+  }
+}

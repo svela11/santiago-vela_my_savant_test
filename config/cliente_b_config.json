@@ -1,0 +1,41 @@
+{
+  "client_id": "cliente_b",
+  "tone": "amigable",
+  "language": "es",
+  "policies": {
+    "no_hallucination": true,
+    "require_confirmation": false,
+    "escalation_threshold": "medium"
+  },
+  "required_fields": {
+    "consulta_estado": ["shipment_id"],
+    "reprogramar_entrega": ["shipment_id", "new_date"],
+    "reportar_incidencia": ["shipment_id", "issue_type", "description"]
+  },
+  "message_templates": {
+    "greeting": "¡Hola! 😊 Soy tu asistente de logística y estoy aquí para ayudarte. Puedo ayudarte con:\n\n🚚 Consultar el estado de tus envíos\n📅 Reprogramar entregas\n⚠️ Reportar cualquier problema\n\n¿Qué necesitas hoy?",
+    "status_update": "¡Perfecto! Aquí tienes la info de tu envío {shipment_id}:\n\n📦 Estado: {status}\n📍 Desde: {origin}\n🎯 Hacia: {destination}\n⏰ Llegada estimada: {eta}\n\n¿Todo bien o necesitas algo más?",
+    "error_message": "¡Ups! Algo salió mal por aquí 😅 ¿Podrías intentar de nuevo? Si sigue sin funcionar, no dudes en contactarnos directamente.",
+    "escalation": "Para darte la mejor ayuda posible, voy a conectarte con uno de nuestros especialistas. ¡Te van a resolver todo súper rápido! 🚀",
+    "confirmation": "¿Todo correcto? ¡Dale que procedemos! 👍"
+  },
+  "escalation_rules": {
+    "high_severity_incidents": true,
+    "multiple_failed_attempts": 3,
+    "unknown_shipment_ids": false,
+    "system_errors": true,
+    "customer_dissatisfaction": false
+  },
+  "business_hours": {
+    "timezone": "America/Mexico_City",
+    "monday_friday": "07:00-19:00",
+    "saturday": "08:00-15:00",
+    "sunday": "10:00-14:00"
+  },
+  "features": {
+    "emojis_enabled": true,
+    "casual_language": true,
+    "proactive_suggestions": true,
+    "quick_responses": true
+  }
+}

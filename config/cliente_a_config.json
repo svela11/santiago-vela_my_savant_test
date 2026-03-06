@@ -1,0 +1,35 @@
+{
+  "client_id": "cliente_a",
+  "tone": "formal",
+  "language": "es",
+  "policies": {
+    "no_hallucination": true,
+    "require_confirmation": true,
+    "escalation_threshold": "high"
+  },
+  "required_fields": {
+    "consulta_estado": ["shipment_id"],
+    "reprogramar_entrega": ["shipment_id", "new_date", "new_time"],
+    "reportar_incidencia": ["shipment_id", "issue_type", "description"]
+  },
+  "message_templates": {
+    "greeting": "Buenos días. Soy el asistente virtual de logística de su empresa. Estoy a su disposición para ayudarle con:\n\n• Consultas sobre el estado de sus envíos\n• Reprogramación de entregas\n• Reporte de incidencias\n\n¿En qué puedo asistirle el día de hoy?",
+    "status_update": "Estimado cliente, el estado actual de su envío {shipment_id} es: {status}.\n\nDetalles:\n• Origen: {origin}\n• Destino: {destination}\n• Fecha estimada de entrega: {eta}\n• Peso: {weight}\n• Piezas: {pieces}\n\n¿Requiere información adicional?",
+    "error_message": "Lamentamos informarle que se ha producido un inconveniente técnico. Le solicitamos intente nuevamente en unos momentos o contacte a nuestro departamento de soporte técnico para recibir asistencia inmediata.",
+    "escalation": "Para brindarle la mejor atención posible en este asunto, procederé a derivar su consulta a nuestro equipo especializado de soporte. Un representante se comunicará con usted a la brevedad.",
+    "confirmation": "Por favor, confirme si desea proceder con la acción solicitada. Esta confirmación es requerida por nuestras políticas de seguridad."
+  },
+  "escalation_rules": {
+    "high_severity_incidents": true,
+    "multiple_failed_attempts": 2,
+    "unknown_shipment_ids": true,
+    "system_errors": true,
+    "customer_dissatisfaction": true
+  },
+  "business_hours": {
+    "timezone": "America/Mexico_City",
+    "monday_friday": "08:00-18:00",
+    "saturday": "09:00-14:00",
+    "sunday": "closed"
+  }
+}

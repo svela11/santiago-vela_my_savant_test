@@ -1,0 +1,39 @@
+# MVP Agente Conversacional de Logística - Dependencias
+
+# Framework web y API
+fastapi>=0.104.1
+uvicorn[standard]>=0.24.0
+streamlit>=1.28.0
+
+# Procesamiento de datos
+pandas>=2.1.0
+numpy>=1.24.0
+
+# HTTP requests y comunicación
+requests>=2.31.0
+httpx>=0.25.0
+
+# Validación de datos
+pydantic>=2.5.0
+
+# Variables de entorno
+python-dotenv>=1.0.0
+
+# Fecha y tiempo
+python-dateutil>=2.8.0
+
+# JSON y serialización
+orjson>=3.9.0
+
+# Logging
+loguru>=0.7.0
+
+# Utilidades
+pathlib2>=2.3.0
+typing-extensions>=4.8.0
+
+# Desarrollo y testing (opcional)
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+black>=23.9.0
+flake8>=6.1.0
