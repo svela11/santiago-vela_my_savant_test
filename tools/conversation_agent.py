@@ -227,20 +227,21 @@ class ConversationAgent:
             if time_match:
                 entities["new_time"] = time_match.group(1)
             
-            # Detectar fechas relativas y horarios
+            # Detectar fechas relativas SOLO si no hay fecha absoluta
             message_lower = user_message.lower()
-            if "mañana" in message_lower:
-                entities["new_date"] = "mañana"
-            elif "viernes" in message_lower:
-                entities["new_date"] = "viernes"
-            elif "lunes" in message_lower:
-                entities["new_date"] = "lunes"
-            elif "sábado" in message_lower or "sabado" in message_lower:
-                entities["new_date"] = "sábado"
-            elif "jueves" in message_lower:
-                entities["new_date"] = "jueves"
-            elif "ayer" in message_lower:
-                entities["new_date"] = "ayer"  # Fecha inválida - será manejada en validación
+            if "new_date" not in entities:  # Solo si no se detectó fecha absoluta
+                if "mañana" in message_lower:
+                    entities["new_date"] = "mañana"
+                elif "viernes" in message_lower:
+                    entities["new_date"] = "viernes"
+                elif "lunes" in message_lower:
+                    entities["new_date"] = "lunes"
+                elif "sábado" in message_lower or "sabado" in message_lower:
+                    entities["new_date"] = "sábado"
+                elif "jueves" in message_lower:
+                    entities["new_date"] = "jueves"
+                elif "ayer" in message_lower:
+                    entities["new_date"] = "ayer"  # Fecha inválida - será manejada en validación
             
             # Detectar horarios relativos
             if "en la tarde" in message_lower or "tarde" in message_lower:
@@ -267,6 +268,37 @@ class ConversationAgent:
             entities["description"] = user_message
         
         return entities
+    
+    def _convert_date_format(self, date_str: str) -> str:
+        """Convertir fecha de DD/MM/YYYY a YYYY-MM-DD para la API."""
+        import re
+        from datetime import datetime
+        
+        # Si es una fecha relativa, devolverla tal como está
+        if date_str in ["mañana", "viernes", "lunes", "sábado", "jueves", "ayer"]:
+            return date_str
+        
+        # Intentar convertir DD/MM/YYYY a YYYY-MM-DD
+        try:
+            # Detectar formato DD/MM/YYYY o DD-MM-YYYY
+            if re.match(r'\d{1,2}[/-]\d{1,2}[/-]\d{4}', date_str):
+                # Separar por / o -
+                parts = re.split(r'[/-]', date_str)
+                if len(parts) == 3:
+                    day, month, year = parts
+                    # Validar que sea una fecha válida
+                    datetime.strptime(f"{year}-{month.zfill(2)}-{day.zfill(2)}", '%Y-%m-%d')
+                    return f"{year}-{month.zfill(2)}-{day.zfill(2)}"
+            
+            # Si ya está en formato YYYY-MM-DD, devolverla tal como está
+            if re.match(r'\d{4}-\d{1,2}-\d{1,2}', date_str):
+                return date_str
+                
+        except ValueError:
+            pass
+        
+        # Si no se puede convertir, devolver la fecha original
+        return date_str
     
     def _is_valid_shipment_id(self, shipment_id: str) -> bool:
         """Validar si un ID de envío tiene formato válido."""
@@ -398,9 +430,9 @@ class ConversationAgent:
         
         if not shipment_id or shipment_id == "NO_ENCONTRADO":
             missing_fields.append("shipment_id")
-        if not new_date or new_date == "NO_ENCONTRADO":
+        if not new_date or new_date == "NO_ENCONTRADO" or new_date == "":
             missing_fields.append("new_date")
-        if not new_time or new_time == "NO_ENCONTRADO":
+        if not new_time or new_time == "NO_ENCONTRADO" or new_time == "":
             missing_fields.append("new_time")
         
         # Validar fecha pasada antes de procesar
@@ -426,9 +458,12 @@ class ConversationAgent:
                 "missing_fields": missing_fields
             }
         
+        # Convertir fecha DD/MM/YYYY a YYYY-MM-DD para la API
+        converted_date = self._convert_date_format(new_date)
+        
         # Llamar API para reprogramar
         reschedule_data = {
-            "new_date": new_date,
+            "new_date": converted_date,
             "new_time": new_time,
             "reason": reason
         }
